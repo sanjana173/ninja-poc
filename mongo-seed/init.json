@@ -1,0 +1,10 @@
+[
+   {
+unique_id:1, username: "shivani", password: "shivani" },
+   { unique_id:2,username: "deepak", password: "deepak" },
+  {unique_id:3, username: "sombir", password: "sombir" },
+{ unique_id:4,username: "sanjana", password: "sanjana" },
+{ unique_id:5,username: "shashank", password: "shashank" },
+{unique_id:6, username: "shlok", password: "shlok" }
+
+])
