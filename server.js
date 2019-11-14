@@ -1,9 +1,8 @@
-var express = require('express');
+﻿var express = require('express');
 var ejs = require('ejs');
 var path = require('path');
 var app = express();
 var bodyParser = require('body-parser');
-
 var mongoose = require('mongoose');
 var session = require('express-session');
 var MongoStore = require('connect-mongo')(session);
@@ -13,12 +12,20 @@ var User = require('./models/user');
 var localStorage = require('localStorage');
 //var alert1 = require('alert');
 
-var port = 8080;
-
+var port = 9000;
+mongoose.Promise = global.Promise;
 mongoose.connect('mongodb://mongo:27017/User', { useNewUrlParser: true });
 
+var nameSchema = new mongoose.Schema({
+  firstName: String,
+  lastNameName: String
+});
+
+var msg = mongoose.model("User", nameSchema);
 
 var userName1;
+
+var apiRoutes = require("./chatMongo/api-routes")
 
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
@@ -46,6 +53,25 @@ app.get('/chat/:user1', function(req, res) {
     
 //	app.locals.myVar = req.params.id;
 });
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use('/api', apiRoutes)
+/*app.post("/addmsg", (req, res) => {
+		  var myData = new msg(req.body);
+		  myData.save()
+			.then(item => {
+			res.send("item saved to database");
+		  })
+			.catch(err => {
+			res.status(400).send("unable to save to database");
+    });
+});
+
+app.get('/getChat', function(req, res) {
+
+});
+*/
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');	
@@ -85,18 +111,18 @@ io.sockets.on('connection', function(socket) {
 		client1 = socket.username;
 		clients = clients.concat(",");
 		clients = clients.concat(client1);
-        io.emit('is_online', '?? <i>' + socket.username + ' join the chat..</i>' + '"\r\n"online users are : ' + clients);
-		io.emit('online users are', '?? <i>' + clients);
+        io.emit('is_online', '🔵 <i>' + socket.username + ' joined the chat..</i>' + '"\r\n"online users are : ' + clients);
+		io.emit('online users are', '🔵 <i>' + clients);
     });
 
     socket.on('disconnect', function(username) {
-        io.emit('is_online', '?? <i>' + socket.username + ' left the chat..</i>');
+        io.emit('is_online', '🔴 <i>' + socket.username + ' left the chat..</i>');
 		var1 = socket.username;
 		var1 = ",".concat(var1);
 		clients = clients.replace(var1,'');
 
 //		clients.splice(clients.indexOf(client), 1);
-    })
+    });
 
     socket.on('chat_message', function(message) {
         io.emit('chat_message', '<strong>' + socket.username + '</strong>: ' + message);
